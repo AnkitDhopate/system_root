@@ -1,0 +1,56 @@
+// fractional Knapsack
+import java.io.*;
+import java.util.*;
+
+public class FractionalKnapSack {
+    
+    private static double getMaxValue(ItemValue[] arr,int capacity) {
+        Arrays.sort(arr, new Comparator<ItemValue>() {
+            public int compare(ItemValue item1, ItemValue item2) {
+                double cpr1 =item1.value / item1.weight;
+                double cpr2 =item2.value / item2.weight;
+
+                if (cpr1 < cpr2)
+                    return 1;
+                else
+                    return -1;
+            }
+        });
+
+        double totalValue = 0;
+
+        for (ItemValue i : arr) {
+
+            int curWt = i.weight;
+            int curVal = i.value;
+
+            if (capacity - curWt >= 0) {
+                capacity -= curWt;
+                totalValue += curVal;
+            } else {
+                double fraction = ((double) capacity / (double) curWt);
+                totalValue += (curVal * fraction);
+                capacity = 0;
+                break;
+            }
+        }
+
+        return totalValue;
+    }
+
+    static class ItemValue {
+
+        int value, weight;
+        public ItemValue(int val, int wt) {
+            this.weight = wt;
+            this.value = val;
+        }
+    }
+
+    public static void main(String[] args) {
+
+        ItemValue[] arr = { new ItemValue(60, 10),new ItemValue(127, 30),new ItemValue(100, 20)};
+        int capacity = 50;
+        System.out.println(getMaxValue(arr, capacity));
+    }
+}
